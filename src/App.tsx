@@ -53,12 +53,26 @@ const Square: FC<SquareProps> = flowMax(
         x: SQUARE_WIDTH * 3,
       })
     }
+    if (index === 3) {
+      gsap.from(path, {
+        duration: DURATION,
+        rotation: radiansToDegrees(PI),
+        x: -SQUARE_WIDTH * 3,
+      })
+    }
     if (index === 4) {
       gsap.from(path, {
         duration: DURATION - 0.1,
         y: -(SQUARE_WIDTH / 2 - SQUARE_OVERLAP / 2),
         ease: 'power1.inOut',
         delay: 0.1,
+      })
+    }
+    if (index === 5) {
+      gsap.from(path, {
+        duration: DURATION,
+        rotation: radiansToDegrees(-PI),
+        x: SQUARE_WIDTH * 3,
       })
     }
   }),
