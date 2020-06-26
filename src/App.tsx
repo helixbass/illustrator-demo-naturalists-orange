@@ -1,16 +1,19 @@
 import React, {FC} from 'react'
 import {flowMax, addDisplayName, addWrapper, addProps} from 'ad-hok'
+import {addLayoutEffectOnMount} from 'ad-hok-utils'
+import gsap from 'gsap'
 
 import {makeStyles} from 'utils/style'
 import colors from 'utils/colors'
+import {addRefs} from 'utils/refs'
+import {radiansToDegrees, PI} from 'utils/angles'
 
 const HEIGHT = 360
 const WIDTH = 504
 const SCALE = 1.8
-// const {sqrt} = Math
 const SQUARE_WIDTH = 240
-const SQUARE_STROKE_WIDTH = 4
-const SQUARE_OVERLAP = SQUARE_WIDTH * 0.14
+const SQUARE_STROKE_WIDTH = 3.3
+const SQUARE_OVERLAP = SQUARE_WIDTH * 0.2
 
 interface Point {
   x: number
@@ -19,10 +22,46 @@ interface Point {
 
 interface SquareProps {
   center: Point
+  index: number
 }
 
 const Square: FC<SquareProps> = flowMax(
   addDisplayName('Square'),
+  addRefs,
+  addLayoutEffectOnMount(({index, refs}) => () => {
+    const {path} = refs
+    const DURATION = 0.5
+    if (index === 0) {
+      gsap.from(path, {
+        duration: DURATION,
+        rotation: radiansToDegrees(-PI),
+        x: -SQUARE_WIDTH * 3,
+      })
+    }
+    if (index === 1) {
+      gsap.from(path, {
+        duration: DURATION - 0.1,
+        y: SQUARE_WIDTH / 2 - SQUARE_OVERLAP / 2,
+        ease: 'power1.inOut',
+        delay: 0.1,
+      })
+    }
+    if (index === 2) {
+      gsap.from(path, {
+        duration: DURATION,
+        rotation: radiansToDegrees(PI),
+        x: SQUARE_WIDTH * 3,
+      })
+    }
+    if (index === 4) {
+      gsap.from(path, {
+        duration: DURATION - 0.1,
+        y: -(SQUARE_WIDTH / 2 - SQUARE_OVERLAP / 2),
+        ease: 'power1.inOut',
+        delay: 0.1,
+      })
+    }
+  }),
   addProps(
     ({center: {x, y}}) => ({
       path: `M ${x - SQUARE_WIDTH / 2} ${y} L ${x} ${y - SQUARE_WIDTH / 2} L ${
@@ -31,12 +70,14 @@ const Square: FC<SquareProps> = flowMax(
     }),
     ['center'],
   ),
-  ({path}) => (
+  ({path, setRef, center}) => (
     <path
+      ref={setRef('path')}
       d={path}
       stroke={colors.white}
       strokeWidth={SQUARE_STROKE_WIDTH}
       fill="none"
+      data-svg-origin={`${center.x} ${center.y}`}
     />
   ),
 )
@@ -80,7 +121,7 @@ const App: FC = flowMax(
         viewBox={`0 0 ${WIDTH} ${HEIGHT}`}
       >
         {squareCenters.map((center, index) => (
-          <Square center={center} key={index} />
+          <Square center={center} index={index} key={index} />
         ))}
       </svg>
     </div>
