@@ -7,6 +7,7 @@ import {makeStyles} from 'utils/style'
 import colors from 'utils/colors'
 import {addRefs} from 'utils/refs'
 import {radiansToDegrees, PI} from 'utils/angles'
+import addRenderingDelay from 'utils/addRenderingDelay'
 
 const HEIGHT = 360
 const WIDTH = 504
@@ -99,6 +100,18 @@ const Square: FC<SquareProps> = flowMax(
 const App: FC = flowMax(
   addDisplayName('App'),
   addWrapper((render) => <div css={styles.page}>{render()}</div>),
+  addWrapper((render) => (
+    <div css={styles.container}>
+      <svg
+        height={HEIGHT * SCALE}
+        width={WIDTH * SCALE}
+        viewBox={`0 0 ${WIDTH} ${HEIGHT}`}
+      >
+        {render()}
+      </svg>
+    </div>
+  )),
+  addRenderingDelay(1000),
   addProps({
     squareCenters: [
       {
@@ -128,17 +141,11 @@ const App: FC = flowMax(
     ],
   }),
   ({squareCenters}) => (
-    <div css={styles.container}>
-      <svg
-        height={HEIGHT * SCALE}
-        width={WIDTH * SCALE}
-        viewBox={`0 0 ${WIDTH} ${HEIGHT}`}
-      >
-        {squareCenters.map((center, index) => (
-          <Square center={center} index={index} key={index} />
-        ))}
-      </svg>
-    </div>
+    <>
+      {squareCenters.map((center, index) => (
+        <Square center={center} index={index} key={index} />
+      ))}
+    </>
   ),
 )
 
