@@ -11,4 +11,6 @@ export default {
   black: '#000000',
   white: '#ffffff',
   orange: '#ef5d23',
+  lightOrangeDot: '#f0825c',
+  darkOrangeDot: '#f05d22',
 }
