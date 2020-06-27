@@ -124,7 +124,7 @@ type AddLeavesType = SimplePropsAdder<{
 }>
 
 const addLeaves: AddLeavesType = flowMax(
-  addRenderingDelay(1000),
+  addRenderingDelay(860),
   addRefs({
     leafs: [],
   }),
