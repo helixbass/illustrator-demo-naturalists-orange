@@ -16,12 +16,13 @@ import {addRefs, ElementRef, Refs} from 'utils/refs'
 import {radiansToDegrees, PI} from 'utils/angles'
 import addRenderingDelay from 'utils/addRenderingDelay'
 import {DrawSVGPlugin} from 'utils/gsap/DrawSVGPlugin'
+import addWindowSize from 'utils/addWindowSize'
 
 gsap.registerPlugin(DrawSVGPlugin)
 
 const HEIGHT = 360
 const WIDTH = 504
-const SCALE = 1.8
+const RATIO = WIDTH / HEIGHT
 const SQUARE_WIDTH = 240
 const SQUARE_STROKE_WIDTH = 3.3
 const SQUARE_OVERLAP = SQUARE_WIDTH * 0.2
@@ -490,14 +491,30 @@ const CenterSquare: FC = flowMax(
   ),
 )
 
+const getScale = (windowSize: {height: number; width: number}): number => {
+  const windowRatio = windowSize.width / windowSize.height
+  if (windowRatio > RATIO) return (windowSize.height - 30) / HEIGHT
+  return (windowSize.width - 30) / WIDTH
+}
+
 const App: FC = flowMax(
   addDisplayName('App'),
   addWrapper((render) => <div css={styles.page}>{render()}</div>),
-  addWrapper((render) => (
-    <div css={styles.container}>
+  addWindowSize,
+  addProps(
+    ({windowSize}) => ({
+      scale: getScale(windowSize),
+    }),
+    ['windowSize'],
+  ),
+  addWrapper((render, {scale}) => (
+    <div
+      css={styles.container}
+      style={{height: HEIGHT * scale, width: WIDTH * scale}}
+    >
       <svg
-        height={HEIGHT * SCALE}
-        width={WIDTH * SCALE}
+        height={HEIGHT * scale}
+        width={WIDTH * scale}
         viewBox={`0 0 ${WIDTH} ${HEIGHT}`}
       >
         {render()}
@@ -586,8 +603,6 @@ const styles = makeStyles({
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: colors.orange,
-    height: HEIGHT * SCALE,
-    width: WIDTH * SCALE,
   },
   orangePath: {
     fill: colors.orange,
