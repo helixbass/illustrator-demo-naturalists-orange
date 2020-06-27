@@ -118,45 +118,74 @@ const Square: FC<SquareProps> = flowMax(
   ),
 )
 
+const TopLeaves: FC = flowMax(
+  addDisplayName('TopLeaves'),
+  addRenderingDelay(1000),
+  addRefs({
+    leafs: [],
+  }),
+  addLayoutEffectOnMount(({refs}) => () => {
+    const {leftStem, centerStem, rightStem, leafs} = refs
+
+    gsap.from(centerStem, {
+      duration: 0.4,
+      drawSVG: '100% 100%',
+      opacity: 0.8,
+    })
+    gsap.from([leftStem, rightStem], {
+      duration: 0.4,
+      drawSVG: '100% 100%',
+      opacity: 0.8,
+    })
+    gsap.from(leafs, {
+      duration: 0.45,
+      opacity: 0,
+      delay: 0.2,
+      ease: 'linear',
+    })
+  }),
+  ({setRef}) => (
+    <g transform={`translate(${WIDTH / 2 - 35}, ${HEIGHT / 2 - 81})`}>
+      <path
+        ref={setRef('leafs.0')}
+        css={styles.leafDarkGreen}
+        d="M43.91,34.69c6.58-6.52,19.86-5.88,19.86-5.88s0.09,0.01,0.18,0.01c0.01,0.09,0.01,0.18,0.01,0.18 S64.95,42.25,58.6,49c-6.06,6.44-19.1,6.16-20.28,6.12C38.25,53.96,37.62,40.92,43.91,34.69z"
+      />
+      <path
+        ref={setRef('leafs.1')}
+        css={styles.leafDarkGreen}
+        d="M32.19,47.03c0-11-14.5-15.58-15.09-26.85C16.67,11.99,26.37,4.54,32.2,0c5.83,4.54,15.53,11.99,15.1,20.18 c-0.59,11.27-15.09,15.86-15.09,26.85"
+      />
+      <path
+        ref={setRef('leafs.2')}
+        css={styles.leafDarkGreen}
+        d="M25.7,55.12C24.52,55.16,11.48,55.45,5.42,49c-6.35-6.75-5.37-20.01-5.37-20.01s0.01-0.09,0.01-0.18 c0.09,0,0.18-0.01,0.18-0.01s13.28-0.64,19.86,5.88C26.4,40.92,25.77,53.96,25.7,55.12z"
+      />
+      <path
+        ref={setRef('leftStem')}
+        css={styles.stem}
+        d="M 64.27 47.53 h -38.14"
+        transform="matrix(0.6979 -0.7162 0.7162 0.6979 -20.7398 46.8815)"
+      />
+      <path
+        ref={setRef('centerStem')}
+        css={styles.stem}
+        d="M 31.69 11.19 v 59.85"
+      />
+      <path
+        ref={setRef('rightStem')}
+        css={styles.stem}
+        d="M 18.32 28.95 v 38.14"
+        transform="matrix(0.7162 -0.6979 0.6979 0.7162 -28.1778 26.7582)"
+      />
+    </g>
+  ),
+)
+
 type AddLeafType = SimplePropsAdder<{
   refs: Refs
   setRef: (name: string) => (ref: ElementRef) => void
 }>
-
-const TopLeaves: FC = flowMax(addDisplayName('TopLeaves'), () => (
-  <g transform={`translate(${WIDTH / 2 - 35}, ${HEIGHT / 2 - 81})`}>
-    <path
-      css={styles.leafDarkGreen}
-      d="M43.91,34.69c6.58-6.52,19.86-5.88,19.86-5.88s0.09,0.01,0.18,0.01c0.01,0.09,0.01,0.18,0.01,0.18 S64.95,42.25,58.6,49c-6.06,6.44-19.1,6.16-20.28,6.12C38.25,53.96,37.62,40.92,43.91,34.69z"
-    />
-    <path
-      css={styles.leafDarkGreen}
-      d="M32.19,47.03c0-11-14.5-15.58-15.09-26.85C16.67,11.99,26.37,4.54,32.2,0c5.83,4.54,15.53,11.99,15.1,20.18 c-0.59,11.27-15.09,15.86-15.09,26.85"
-    />
-    <path
-      css={styles.leafDarkGreen}
-      d="M25.7,55.12C24.52,55.16,11.48,55.45,5.42,49c-6.35-6.75-5.37-20.01-5.37-20.01s0.01-0.09,0.01-0.18 c0.09,0,0.18-0.01,0.18-0.01s13.28-0.64,19.86,5.88C26.4,40.92,25.77,53.96,25.7,55.12z"
-    />
-    <line x1="58.51" y1="34.37" x2="31.9" y2="61.69" />
-    <rect
-      x="26.13"
-      y="47.53"
-      transform="matrix(0.6979 -0.7162 0.7162 0.6979 -20.7398 46.8815)"
-      width="38.14"
-      height="0.99"
-    />
-    <line x1="32.19" y1="11.19" x2="32.19" y2="71.03" />
-    <rect x="31.69" y="11.19" width="0.99" height="59.85" />
-    <line x1="5.5" y1="34.37" x2="32.12" y2="61.69" />
-    <rect
-      x="18.32"
-      y="28.95"
-      transform="matrix(0.7162 -0.6979 0.6979 0.7162 -28.1778 26.7582)"
-      width="0.99"
-      height="38.14"
-    />
-  </g>
-))
 
 const addLeaf: AddLeafType = flowMax(
   addRefs(),
