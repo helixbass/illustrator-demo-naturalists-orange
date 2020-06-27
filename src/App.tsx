@@ -117,16 +117,35 @@ const Square: FC<SquareProps> = flowMax(
   ),
 )
 
-const LeafLeft: FC = flowMax(addDisplayName('Leaf'), addRefs(), ({setRef}) => (
-  <g transform={`translate(${WIDTH / 2 - 92}, ${HEIGHT / 2 - 11.5})`}>
-    <path
-      ref={setRef('leaf')}
-      css={styles.leafLightGreen}
-      d="M44.12,13.86c-0.84,2.63-2.43,6.43-5.49,9.42c-7.03,6.86-16.41,4.08-21.13,2.68C8.96,23.42,3.11,17.57,0,13.85 c3.11-3.72,8.96-9.57,17.5-12.1c4.73-1.4,14.1-4.18,21.13,2.68C41.69,7.42,43.28,11.23,44.12,13.86"
-    />
-    <path ref={setRef('stem')} css={styles.stem} d="M 3.12 13.75 h 44.23" />
-  </g>
-))
+const LeafLeft: FC = flowMax(
+  addDisplayName('Leaf'),
+  addRefs(),
+  addRenderingDelay(800),
+  addLayoutEffectOnMount(({refs}) => () => {
+    const {stem, leaf} = refs
+
+    gsap.from(stem, {
+      duration: 0.4,
+      drawSVG: '100% 100%',
+      opacity: 0.8,
+    })
+    gsap.from(leaf, {
+      duration: 0.6,
+      opacity: 0,
+      delay: 0.1,
+    })
+  }),
+  ({setRef}) => (
+    <g transform={`translate(${WIDTH / 2 - 92}, ${HEIGHT / 2 - 11.5})`}>
+      <path
+        ref={setRef('leaf')}
+        css={styles.leafLightGreen}
+        d="M44.12,13.86c-0.84,2.63-2.43,6.43-5.49,9.42c-7.03,6.86-16.41,4.08-21.13,2.68C8.96,23.42,3.11,17.57,0,13.85 c3.11-3.72,8.96-9.57,17.5-12.1c4.73-1.4,14.1-4.18,21.13,2.68C41.69,7.42,43.28,11.23,44.12,13.86"
+      />
+      <path ref={setRef('stem')} css={styles.stem} d="M 3.12 13.75 h 44.23" />
+    </g>
+  ),
+)
 
 const Dots: FC = flowMax(
   addDisplayName('Dots'),
