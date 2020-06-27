@@ -5,13 +5,14 @@ import {
   addWrapper,
   addProps,
   addStateHandlers,
+  SimplePropsAdder,
 } from 'ad-hok'
 import {addLayoutEffectOnMount} from 'ad-hok-utils'
 import gsap from 'gsap'
 
 import {makeStyles} from 'utils/style'
 import colors from 'utils/colors'
-import {addRefs, ElementRef} from 'utils/refs'
+import {addRefs, ElementRef, Refs} from 'utils/refs'
 import {radiansToDegrees, PI} from 'utils/angles'
 import addRenderingDelay from 'utils/addRenderingDelay'
 import {DrawSVGPlugin} from 'utils/gsap/DrawSVGPlugin'
@@ -117,10 +118,14 @@ const Square: FC<SquareProps> = flowMax(
   ),
 )
 
-const LeafLeft: FC = flowMax(
-  addDisplayName('Leaf'),
+type AddLeafType = SimplePropsAdder<{
+  refs: Refs
+  setRef: (name: string) => (ref: ElementRef) => void
+}>
+
+const addLeaf: AddLeafType = flowMax(
   addRefs(),
-  addRenderingDelay(800),
+  addRenderingDelay(900),
   addLayoutEffectOnMount(({refs}) => () => {
     const {stem, leaf} = refs
 
@@ -135,6 +140,11 @@ const LeafLeft: FC = flowMax(
       delay: 0.1,
     })
   }),
+)
+
+const LeafLeft: FC = flowMax(
+  addDisplayName('LeafLeft'),
+  addLeaf,
   ({setRef}) => (
     <g transform={`translate(${WIDTH / 2 - 92}, ${HEIGHT / 2 - 11.5})`}>
       <path
@@ -143,6 +153,21 @@ const LeafLeft: FC = flowMax(
         d="M44.12,13.86c-0.84,2.63-2.43,6.43-5.49,9.42c-7.03,6.86-16.41,4.08-21.13,2.68C8.96,23.42,3.11,17.57,0,13.85 c3.11-3.72,8.96-9.57,17.5-12.1c4.73-1.4,14.1-4.18,21.13,2.68C41.69,7.42,43.28,11.23,44.12,13.86"
       />
       <path ref={setRef('stem')} css={styles.stem} d="M 3.12 13.75 h 44.23" />
+    </g>
+  ),
+)
+
+const LeafRight: FC = flowMax(
+  addDisplayName('LeafRight'),
+  addLeaf,
+  ({setRef}) => (
+    <g transform={`translate(${WIDTH / 2 + 44}, ${HEIGHT / 2 - 11.5})`}>
+      <path
+        ref={setRef('leaf')}
+        css={styles.leafLightGreen}
+        d="M3.23,13.85c0.84-2.63,2.43-6.43,5.49-9.42c7.03-6.86,16.41-4.08,21.13-2.68c8.54,2.53,14.39,8.38,17.5,12.1 c-3.11,3.72-8.96,9.57-17.5,12.1c-4.73,1.4-14.1,4.18-21.13-2.68C5.66,20.29,4.07,16.48,3.23,13.85"
+      />
+      <path ref={setRef('stem')} css={styles.stem} d="M 44.23 13.75 H 0" />
     </g>
   ),
 )
@@ -420,6 +445,7 @@ const App: FC = flowMax(
           <Name />
           <Dots />
           <LeafLeft />
+          <LeafRight />
         </>
       )}
     </>
