@@ -14,5 +14,6 @@ export default {
   lightOrangeDot: '#f0825c',
   darkOrangeDot: '#f05d22',
   lightGreenLeaf: '#c9cb42',
+  darkGreenLeaf: '#43ba90',
   blackStem: '#191125',
 }
