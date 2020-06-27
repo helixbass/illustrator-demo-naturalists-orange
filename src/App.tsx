@@ -118,8 +118,12 @@ const Square: FC<SquareProps> = flowMax(
   ),
 )
 
-const TopLeaves: FC = flowMax(
-  addDisplayName('TopLeaves'),
+type AddLeavesType = SimplePropsAdder<{
+  refs: Refs
+  setRef: (name: string) => (ref: ElementRef) => void
+}>
+
+const addLeaves: AddLeavesType = flowMax(
   addRenderingDelay(1000),
   addRefs({
     leafs: [],
@@ -144,6 +148,11 @@ const TopLeaves: FC = flowMax(
       ease: 'linear',
     })
   }),
+)
+
+const TopLeaves: FC = flowMax(
+  addDisplayName('TopLeaves'),
+  addLeaves,
   ({setRef}) => (
     <g transform={`translate(${WIDTH / 2 - 35}, ${HEIGHT / 2 - 81})`}>
       <path
@@ -177,6 +186,47 @@ const TopLeaves: FC = flowMax(
         css={styles.stem}
         d="M 18.32 28.95 v 38.14"
         transform="matrix(0.7162 -0.6979 0.6979 0.7162 -28.1778 26.7582)"
+      />
+    </g>
+  ),
+)
+
+const BottomLeaves: FC = flowMax(
+  addDisplayName('BottomLeaves'),
+  addLeaves,
+  ({setRef}) => (
+    <g transform={`translate(${WIDTH / 2 - 35}, ${HEIGHT / 2 + 12})`}>
+      <path
+        ref={setRef('leafs.0')}
+        css={styles.leafDarkGreen}
+        d="M20.11,36.34c-6.58,6.52-19.86,5.88-19.86,5.88s-0.09-0.01-0.18-0.01c-0.01-0.09-0.01-0.18-0.01-0.18 s-0.98-13.26,5.37-20.01c6.06-6.44,19.1-6.16,20.28-6.12C25.77,17.07,26.4,30.11,20.11,36.34z"
+      />
+      <path
+        ref={setRef('leafs.1')}
+        css={styles.leafDarkGreen}
+        d="M31.83,24c0,11,14.5,15.58,15.09,26.85c0.43,8.19-9.27,15.64-15.1,20.18c-5.83-4.54-15.53-11.99-15.1-20.18 C17.31,39.57,31.81,34.99,31.81,24"
+      />
+      <path
+        ref={setRef('leafs.2')}
+        css={styles.leafDarkGreen}
+        d="M38.32,15.9c1.18-0.04,14.22-0.32,20.28,6.12c6.35,6.75,5.37,20.01,5.37,20.01s-0.01,0.09-0.01,0.18 c-0.09,0-0.18,0.01-0.18,0.01s-13.28,0.64-19.86-5.88C37.62,30.11,38.25,17.07,38.32,15.9z"
+      />
+      <path
+        ref={setRef('leftStem')}
+        css={styles.stem}
+        d="M -0.26 22.51 h 38.14"
+        transform="matrix(0.6979 -0.7162 0.7162 0.6979 -10.7881 20.4203)"
+      />
+      <path
+        ref={setRef('centerStem')}
+        css={styles.stem}
+        d="M 31.37 59.85 V 0"
+      />
+      <path
+        ref={setRef('rightStem')}
+        css={styles.stem}
+        d="M 44.71 42.07 v -38.14"
+        transform="matrix(0.7162 -0.6979 0.6979 0.7162 -3.2218 38.0745)"
       />
     </g>
   ),
@@ -511,6 +561,7 @@ const App: FC = flowMax(
           <LeafLeft />
           <LeafRight />
           <TopLeaves />
+          <BottomLeaves />
         </>
       )}
     </>
